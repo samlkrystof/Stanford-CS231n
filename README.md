@@ -2,6 +2,7 @@
 This repository contains my solutions of the assignments from course CS321n by Stanford University from Spring 2022.
 
 All course related stuff can be found [here](http://cs231n.stanford.edu/index.html "Stanford University CS231n: Deep Learning for Computer Vision")
+All video lectures from 2016 can be found [here](https://youtube.com/playlist?list=PLkt2uSq6rBVctENoVBg1TpCC7OQi31AlC)
 
 ## Assignment 1
 * [Q1](../main/assignment1/knn.ipynb): k-Nearest Neighbor classifier
