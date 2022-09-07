@@ -5,7 +5,7 @@ All course related stuff can be found [here](http://cs231n.stanford.edu/index.ht
 
 ## Assignment 1
 * [Q1](../main/assignment1/knn.ipynb): k-Nearest Neighbor classifier
-* [Q2](../assignment1/svm.ipynb): Training a Support Vector Machine
-* [Q3](../assignment1/softmax.ipynb): Implement a Softmax classifier
-* [Q4](../assignment1/two_layer_net.ipynb): Two-Layer Neural Network
-* [Q5](../assignment1/features.ipynb): Higher Level Representations: Image Features
+* [Q2](../main/assignment1/svm.ipynb): Training a Support Vector Machine
+* [Q3](../main/assignment1/softmax.ipynb): Implement a Softmax classifier
+* [Q4](../main/assignment1/two_layer_net.ipynb): Two-Layer Neural Network
+* [Q5](../main/assignment1/features.ipynb): Higher Level Representations: Image Features
