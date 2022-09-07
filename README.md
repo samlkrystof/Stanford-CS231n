@@ -9,3 +9,18 @@ All course related stuff can be found [here](http://cs231n.stanford.edu/index.ht
 * [Q3](../main/assignment1/softmax.ipynb): Implement a Softmax classifier
 * [Q4](../main/assignment1/two_layer_net.ipynb): Two-Layer Neural Network
 * [Q5](../main/assignment1/features.ipynb): Higher Level Representations: Image Features
+___
+## Assignment 2
+* [Q1](../main/assignment2/FullyConnectedNets.ipynb): Multi-Layer Fully Connected Neural Networks
+* [Q2](../main/assignment2/BatchNormalization.ipynb): Batch Normalization
+* [Q3](../main/assignment2/Dropout.ipynb): Dropout
+* [Q4](../main/assignment2/ConvolutionalNetworks.ipynb): Convolutional Neural Networks
+* [Q5](../main/assignment2/Pytorch.ipynb): PyTorch on CIFAR-10
+* [Q6](../main/assignment2/Network_Visualisation.ipynb): Network Visualization: Saliency Maps, Class Visualization, and Fooling Images
+___
+
+
+
+
+
+
