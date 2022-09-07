@@ -21,11 +21,11 @@ ___
 ___
 ## Assignment 3
 ### This assignment is not finished yet.
-* [Q1](../main/assignment3/RNN_Captioning.ipynb): Image Captioning with Vanilla RNNs
-* [Q2](../main/assignment3/Transformer_Captioning.ipynb): Image Captioning with Transformers
-* [Q3](../main/assignment3/Generative_Adversarial_Networks.ipynb): Generative Adversarial Networks
-* [Q4](../main/assignment3/Self_Supervised_Learning.ipynb): Self-Supervised Learning for Image Classification
-* [Extra credit](../main/assignment3/LSTM_Captioning.ipynb): Image Captioning with LSTMs
+* [Q1](../main/assignment3/RNN_Captioning.ipynb): Image Captioning with Vanilla RNNs (Completed)
+* [Q2](../main/assignment3/Transformer_Captioning.ipynb): Image Captioning with Transformers (In progress)
+* [Q3](../main/assignment3/Generative_Adversarial_Networks.ipynb): Generative Adversarial Networks (TODO)
+* [Q4](../main/assignment3/Self_Supervised_Learning.ipynb): Self-Supervised Learning for Image Classification (TODO)
+* [Extra credit](../main/assignment3/LSTM_Captioning.ipynb): Image Captioning with LSTMs (TODO)
 
 
 
