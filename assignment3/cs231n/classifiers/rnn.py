@@ -148,7 +148,38 @@ class CaptioningRNN:
         ############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        hid_init, init_cache = affine_forward(features, W_proj, b_proj)
+        emb, emb_cache = word_embedding_forward(captions_in, W_embed)
+        if self.cell_type == "rnn":
+          out, rnn_cache = rnn_forward(emb, hid_init, Wx, Wh, b)
+        else:
+          out, lstm_cache = lstm_forward(emb, hid_init, Wx, Wh, b)
+
+        temp, temp_cache = temporal_affine_forward(out, W_vocab, b_vocab) 
+        
+        loss, dout = temporal_softmax_loss(temp, captions_out, mask)
+
+
+
+        # backward pass
+        dx, dw, db = temporal_affine_backward(dout, temp_cache)
+        grads["W_vocab"] = dw
+        grads["b_vocab"] = db
+
+        if self.cell_type == "rnn":
+          dx, dh, dWx, dWh, db = rnn_backward(dx, rnn_cache)
+        else:
+          dx, dh, dprev_c, dWx, dWh, db = lstm_backward(dx, lstm_cache)
+
+        grads["Wx"] = dWx
+        grads["Wh"] = dWh
+        grads["b"] = db
+        
+        grads["W_embed"] = word_embedding_backward(dx, emb_cache) 
+
+        dx, dw, db = affine_backward(dh, init_cache)
+        grads["W_proj"] = dw
+        grads["b_proj"] = db
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         ############################################################################
@@ -215,8 +246,34 @@ class CaptioningRNN:
         # you are using an LSTM, initialize the first cell state to zeros.        #
         ###########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        hidden, _ = affine_forward(features, W_proj, b_proj)
+        x, _ = word_embedding_forward(np.full(N, self._start, dtype=int), W_embed)
+        for i in range(max_length):
+          hidden, _ = rnn_step_forward(x, hidden, Wx, Wh, b)
+          scores = hidden.dot(W_vocab) + b_vocab
+          max_indices = np.argmax(scores, axis=1)
+          captions[:,i] = max_indices
+          x, _ = word_embedding_forward(max_indices, W_embed)
 
-        pass
+        # ***** stop after end token is reached *****
+
+        # hidden0, _ = affine_forward(features, W_proj, b_proj)
+        # for n in range(N):
+        #  hidden = hidden0[n]
+        #  hidden = hidden[np.newaxis, np.newaxis, :]
+        #  actual_word = self._start
+        #  for i in range(max_length):
+        #    words, _ = word_embedding_forward(actual_word, W_embed)
+        #    hidden, _ = rnn_step_forward(words, hidden, Wx, Wh, b)
+            
+        #    aff, _ = temporal_affine_forward(hidden, W_vocab, b_vocab)
+        #    actual_word = np.argmax(aff)
+
+        #    captions[n, i] = actual_word
+        #    if actual_word == self._end:
+        #      break
+          
+        
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         ############################################################################
