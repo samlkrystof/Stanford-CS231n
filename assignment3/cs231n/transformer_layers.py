@@ -170,7 +170,8 @@ class MultiHeadAttention(nn.Module):
         ############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         
-        key, value, query = [layer(x).view(N, S, self.n_head, self.head_dim).transpose(1, 2) for 
+        #must be -1, because S and T could differ
+        key, value, query = [layer(x).view(N, -1, self.n_head, self.head_dim).transpose(1, 2) for 
                             layer, x in zip((self.key, self.value, self.query), (key, value, query))]
         scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(self.head_dim)
         
