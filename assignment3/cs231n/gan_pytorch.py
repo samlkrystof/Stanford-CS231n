@@ -30,7 +30,7 @@ def sample_noise(batch_size, dim, seed=None):
 
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    return torch.rand((batch_size, dim)) * 2 - 1
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -51,7 +51,14 @@ def discriminator(seed=None):
     ##############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    model = nn.Sequential(
+            Flatten(),
+            nn.Linear(784, 256),
+            nn.LeakyReLU(negative_slope=0.01),
+            nn.Linear(256, 256),
+            nn.LeakyReLU(negative_slope=0.01),
+            nn.Linear(256, 1)
+    )
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ##############################################################################
@@ -76,7 +83,14 @@ def generator(noise_dim=NOISE_DIM, seed=None):
     ##############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    model = nn.Sequential(
+            nn.Linear(noise_dim, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, 784),
+            nn.Tanh()
+    )
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ##############################################################################
@@ -96,7 +110,8 @@ def bce_loss(input, target):
     - A PyTorch Tensor containing the mean BCE loss over the minibatch of input data.
     """
     bce = nn.BCEWithLogitsLoss()
-    return bce(input.squeeze(), target)
+    #return bce(input.squeeze(), target)
+    return bce(input, target)
 
 def discriminator_loss(logits_real, logits_fake):
     """
@@ -111,8 +126,9 @@ def discriminator_loss(logits_real, logits_fake):
     """
     loss = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-    pass
+    shape = logits_real.shape
+    loss = bce_loss(logits_real, torch.ones(shape, device="cuda:0")) \
+     + bce_loss(logits_fake, torch.zeros(shape, device="cuda:0"))
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return loss
@@ -130,7 +146,7 @@ def generator_loss(logits_fake):
     loss = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    loss = bce_loss(logits_fake, torch.ones(logits_fake.shape, device="cuda:0").type(dtype))
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return loss
@@ -149,7 +165,7 @@ def get_optimizer(model):
     optimizer = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    optimizer = optim.Adam(model.parameters(), 1e-3, (0.5, 0.999))
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return optimizer
@@ -167,9 +183,13 @@ def ls_discriminator_loss(scores_real, scores_fake):
     """
     loss = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    shape = scores_real.shape
+    loss = 0.5 * (torch.mean(torch.square(scores_real - torch.ones(shape, device="cuda:0"))))
+    loss += 0.5 * (torch.mean(torch.square(scores_fake - torch.zeros(shape, device="cuda:0"))))
 
-    pass
-
+    #loss = torch.nn.functional.mse_loss(scores_real, torch.ones(shape, device="cuda:0"))
+    #loss += torch.nn.functional.mse_loss(scores_fake, torch.zeros(shape, device="cuda:0"))
+    #loss *= 0.5
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return loss
 
@@ -185,8 +205,8 @@ def ls_generator_loss(scores_fake):
     """
     loss = None
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-    pass
+    shape = scores_fake.shape
+    loss = 0.5 * torch.nn.functional.mse_loss(scores_fake, torch.ones(shape, device="cuda:0"))
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return loss
@@ -203,14 +223,24 @@ def build_dc_classifier(batch_size):
     # HINT: nn.Sequential might be helpful.                                      #
     ##############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-    pass
+    model = nn.Sequential(
+      nn.Conv2d(1, 32, 5, 1),
+      nn.LeakyReLU(0.01),
+      nn.MaxPool2d(2, 2),
+      nn.Conv2d(32, 64, 5, 1),
+      nn.LeakyReLU(0.01),
+      nn.MaxPool2d(2, 2),
+      Flatten(),
+      nn.Linear(4 * 4 * 64, 1024),
+      nn.LeakyReLU(0.01),
+      nn.Linear(1024, 1)
+    )
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ##############################################################################
     #                               END OF YOUR CODE                             #
     ##############################################################################
-
+    return model
 
 def build_dc_generator(noise_dim=NOISE_DIM):
     """
@@ -225,12 +255,27 @@ def build_dc_generator(noise_dim=NOISE_DIM):
     ##############################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-    pass
+    model = nn.Sequential(
+      nn.Linear(noise_dim, 1024),
+      nn.ReLU(),
+      nn.BatchNorm1d(1024),
+      nn.Linear(1024, 7 * 7 * 128),
+      nn.ReLU(),
+      nn.BatchNorm1d(7 * 7 * 128),
+      Unflatten(),
+      nn.ConvTranspose2d(128, 64, 4, 2, padding=1),
+      nn.ReLU(),
+      nn.BatchNorm2d(64),
+      nn.ConvTranspose2d(64, 1, 4, 2, padding=1),
+      nn.Tanh(),
+      Flatten()
+    )
 
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     ##############################################################################
     #                               END OF YOUR CODE                             #
     ##############################################################################
+    return model
 
 def run_a_gan(D, G, D_solver, G_solver, discriminator_loss, generator_loss, loader_train, show_every=250,
               batch_size=128, noise_size=96, num_epochs=10):
