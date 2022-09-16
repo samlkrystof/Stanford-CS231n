@@ -25,7 +25,7 @@ ___
 * [Q2](../main/assignment3/Transformer_Captioning.ipynb): Image Captioning with Transformers (Completed)
 * [Q3](../main/assignment3/Generative_Adversarial_Networks.ipynb): Generative Adversarial Networks (Completed)
 * [Q4](../main/assignment3/Self_Supervised_Learning.ipynb): Self-Supervised Learning for Image Classification (Completed)
-* [Extra credit](../main/assignment3/LSTM_Captioning.ipynb): Image Captioning with LSTMs (TODO)
+* [Extra credit](../main/assignment3/LSTM_Captioning.ipynb): Image Captioning with LSTMs (Completed)
 
 
 
