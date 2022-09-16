@@ -20,12 +20,11 @@ ___
 * [Q6](../main/assignment2/Network_Visualisation.ipynb): Network Visualization: Saliency Maps, Class Visualization, and Fooling Images
 ___
 ## Assignment 3
-### This assignment is not finished yet.
-* [Q1](../main/assignment3/RNN_Captioning.ipynb): Image Captioning with Vanilla RNNs (Completed)
-* [Q2](../main/assignment3/Transformer_Captioning.ipynb): Image Captioning with Transformers (Completed)
-* [Q3](../main/assignment3/Generative_Adversarial_Networks.ipynb): Generative Adversarial Networks (Completed)
-* [Q4](../main/assignment3/Self_Supervised_Learning.ipynb): Self-Supervised Learning for Image Classification (Completed)
-* [Extra credit](../main/assignment3/LSTM_Captioning.ipynb): Image Captioning with LSTMs (Completed)
+* [Q1](../main/assignment3/RNN_Captioning.ipynb): Image Captioning with Vanilla RNNs
+* [Q2](../main/assignment3/Transformer_Captioning.ipynb): Image Captioning with Transformers
+* [Q3](../main/assignment3/Generative_Adversarial_Networks.ipynb): Generative Adversarial Networks
+* [Q4](../main/assignment3/Self_Supervised_Learning.ipynb): Self-Supervised Learning for Image Classification
+* [Extra credit](../main/assignment3/LSTM_Captioning.ipynb): Image Captioning with LSTMs
 
 
 
