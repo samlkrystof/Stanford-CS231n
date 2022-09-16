@@ -169,7 +169,7 @@ class CaptioningRNN:
         if self.cell_type == "rnn":
           dx, dh, dWx, dWh, db = rnn_backward(dx, rnn_cache)
         else:
-          dx, dh, dprev_c, dWx, dWh, db = lstm_backward(dx, lstm_cache)
+          dx, dh, dWx, dWh, db = lstm_backward(dx, lstm_cache)
 
         grads["Wx"] = dWx
         grads["Wh"] = dWh
@@ -248,12 +248,26 @@ class CaptioningRNN:
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         hidden, _ = affine_forward(features, W_proj, b_proj)
         x, _ = word_embedding_forward(np.full(N, self._start, dtype=int), W_embed)
-        for i in range(max_length):
-          hidden, _ = rnn_step_forward(x, hidden, Wx, Wh, b)
-          scores = hidden.dot(W_vocab) + b_vocab
-          max_indices = np.argmax(scores, axis=1)
-          captions[:,i] = max_indices
-          x, _ = word_embedding_forward(max_indices, W_embed)
+        
+        if self.cell_type == "rnn":
+          for i in range(max_length):
+            hidden, _ = rnn_step_forward(x, hidden, Wx, Wh, b)
+            scores = hidden.dot(W_vocab) + b_vocab
+            max_indices = np.argmax(scores, axis=1)
+            captions[:,i] = max_indices
+            x, _ = word_embedding_forward(max_indices, W_embed)
+            
+        else:
+          cell = np.zeros(hidden.shape)
+        
+          for i in range(max_length):
+            hidden, cell, _ = lstm_step_forward(x, hidden, cell, Wx, Wh, b)
+            scores = hidden.dot(W_vocab) + b_vocab
+            max_indices = np.argmax(scores, axis=1)
+            captions[:,i] = max_indices
+            x, _ = word_embedding_forward(max_indices, W_embed)
+    
+
 
         # ***** stop after end token is reached *****
 
